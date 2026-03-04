@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Monitor, CreditCard, Wifi, Headphones, ArrowRight } from "lucide-react";
-import heroImage from "@/assets/hero-machines.jpg";
+import heroImage from "@/assets/hero-sohub-machine.png";
 
 const machineTypes = [
   "Snack Vending Machines",
@@ -50,7 +50,7 @@ const HeroSection = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
-        <span className="section-badge">
+        <span className="section-badge mt-8">
           <span className="w-2 h-2 rounded-full bg-accent animate-pulse-soft" />
           Machine Infrastructure Platform
         </span>

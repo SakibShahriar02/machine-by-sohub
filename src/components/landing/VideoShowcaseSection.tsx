@@ -14,11 +14,8 @@ const videos: VideoSlot[] = [
   { title: "Snack Vending Demo", youtubeId: "4835onrVx34" },
   { title: "Snack Machine Assembly", youtubeId: "chWoJsI6XgY" },
   { title: "Vending Operations", youtubeId: "RlywkUl-TCg" },
-  { title: "Smart Fridge Overview", youtubeId: "" },
-  { title: "Claw Machine Gameplay", youtubeId: "" },
-  { title: "Dashboard Walkthrough", youtubeId: "" },
-  { title: "Payment Integration", youtubeId: "" },
-  { title: "Field Deployment", youtubeId: "" },
+  { title: "Smart Fridge Overview", youtubeId: "o8ahmgEQtZU" },
+  { title: "Claw Machine Gameplay", youtubeId: "IOxUbO_gcYE" },
 ];
 
 const VideoShowcaseSection = () => {
@@ -100,22 +97,14 @@ const VideoShowcaseSection = () => {
                   <div className="rounded-2xl overflow-hidden border border-border bg-card shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1 group">
                     {v.youtubeId ? (
                       <div className="aspect-video relative">
-                        <img
-                          src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
-                          alt={v.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        <iframe
+                          src={`https://www.youtube.com/embed/${v.youtubeId}`}
+                          title={v.title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="w-full h-full"
                           loading="lazy"
                         />
-                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                          <a
-                            href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-14 h-14 rounded-full bg-accent flex items-center justify-center shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300"
-                          >
-                            <Play size={22} className="text-accent-foreground ml-0.5" fill="currentColor" />
-                          </a>
-                        </div>
                       </div>
                     ) : (
                       <div className="aspect-video bg-secondary/80 flex flex-col items-center justify-center text-muted-foreground">

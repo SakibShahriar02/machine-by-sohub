@@ -60,9 +60,9 @@ const PaymentsSection = () => (
         {/* Video */}
         <ScrollReveal direction="right">
           <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-border/50">
-            <div className="aspect-video">
+            <div className="aspect-video relative">
               <iframe
-                src="https://www.youtube.com/embed/4835onrVx34?rel=0"
+                src="https://www.youtube.com/embed/fZHZeiDbxpU"
                 title="SOHUB Payment Integration Demo"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

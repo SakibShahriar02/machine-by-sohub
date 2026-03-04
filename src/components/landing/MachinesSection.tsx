@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import ScrollReveal from "../ScrollReveal";
 import { ArrowRight, ExternalLink, Check } from "lucide-react";
-import vendingImg from "@/assets/machine-vending.jpg";
-import smartFridgeImg from "@/assets/machine-smart-fridge.jpg";
-import lockerImg from "@/assets/machine-locker.jpg";
-import powerbankImg from "@/assets/machine-powerbank.jpg";
-import clawImg from "@/assets/machine-claw.jpg";
+import vendingImg from "@/assets/sohub-snacks.png";
+import smartFridgeImg from "@/assets/sohub-omama-v2.png";
+import lockerImg from "@/assets/sohub-locker-v1.png";
+import powerbankImg from "@/assets/sohub-power-bank-v1.png";
+import clawImg from "@/assets/sohub-clowee-v1.png";
 
 interface MachineItem {
   img: string;

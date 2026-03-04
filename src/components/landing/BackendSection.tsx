@@ -1,6 +1,9 @@
 import ScrollReveal from "../ScrollReveal";
 import { LayoutDashboard, BarChart3, Package, Activity, Settings2, ShieldCheck } from "lucide-react";
-import dashboardImg from "@/assets/dashboard-ecosystem.jpg";
+import dashboardImg from "@/assets/sohub-dashboard.png";
+import analyticsImg from "@/assets/sohub-analytics.png";
+import inventoryImg from "@/assets/sohub-inventory.jpeg";
+import monitoringImg from "@/assets/sohub-machine-control.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const features = [
@@ -14,9 +17,9 @@ const features = [
 
 const screenshots = [
   { id: "dashboard", label: "Dashboard", image: dashboardImg, caption: "Unified machine management dashboard with real-time status overview" },
-  { id: "analytics", label: "Analytics", image: dashboardImg, caption: "Sales analytics and transaction reporting across all machines" },
-  { id: "inventory", label: "Inventory", image: dashboardImg, caption: "Inventory tracking with automated refill workflow management" },
-  { id: "monitoring", label: "Monitoring", image: dashboardImg, caption: "Live health monitoring and diagnostic error logging" },
+  { id: "analytics", label: "Analytics", image: analyticsImg, caption: "Sales analytics and transaction reporting across all machines" },
+  { id: "inventory", label: "Inventory", image: inventoryImg, caption: "Inventory tracking with automated refill workflow management" },
+  { id: "monitoring", label: "Monitoring", image: monitoringImg, caption: "Live health monitoring and diagnostic error logging" },
 ];
 
 const BackendSection = () => (
@@ -26,7 +29,7 @@ const BackendSection = () => (
       <ScrollReveal>
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="section-badge">Backend Platform</span>
-          <h2 className="heading-section mb-6 whitespace-nowrap">
+          <h2 className="heading-section mb-6 whitespace">
             One ecosystem powering every machine
           </h2>
           <p className="body-large">

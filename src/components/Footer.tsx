@@ -37,6 +37,27 @@ const Footer = () => {
           <p className="text-sm text-primary-foreground/60 max-w-sm leading-relaxed">
             Building reliable machine infrastructure for Bangladesh with integrated backend, payments, and technical support.
           </p>
+          {/* Mobile layout: Platform and Company side by side */}
+          <div className="md:hidden grid grid-cols-2 gap-8 mt-8">
+            <div>
+              <h4 className="text-sm font-semibold mb-4 text-primary-foreground">Platform</h4>
+              <ul className="space-y-2.5 text-sm text-primary-foreground/50">
+                <li><button onClick={() => handleNavClick("#machines")} className="hover:text-primary-foreground transition-colors text-left">Machines</button></li>
+                <li><button onClick={() => handleNavClick("#ecosystem")} className="hover:text-primary-foreground transition-colors text-left">Ecosystem</button></li>
+                <li><button onClick={() => handleNavClick("#payments")} className="hover:text-primary-foreground transition-colors text-left">Payments</button></li>
+                <li><button onClick={() => handleNavClick("#video-showcase")} className="hover:text-primary-foreground transition-colors text-left">Video Showcase</button></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold mb-4 text-primary-foreground">Company</h4>
+              <ul className="space-y-2.5 text-sm text-primary-foreground/50">
+                <li><button onClick={() => handleNavClick("#use-cases")} className="hover:text-primary-foreground transition-colors text-left">Use Cases</button></li>
+                <li><button onClick={() => handleNavClick("#pricing")} className="hover:text-primary-foreground transition-colors text-left">Pricing</button></li>
+                <li><button onClick={() => handleNavClick("#faq")} className="hover:text-primary-foreground transition-colors text-left">FAQ</button></li>
+                <li><a href="https://wa.me/8801922036882" target="_blank" rel="noopener noreferrer" className="hover:text-primary-foreground transition-colors">WhatsApp</a></li>
+              </ul>
+            </div>
+          </div>
           {/* Social Links */}
           <div className="flex items-center gap-3 mt-6">
             {socialLinks.map((s) => (
@@ -56,7 +77,7 @@ const Footer = () => {
             A product of SOHUB — Solution Hub Technologies
           </p>
         </div>
-        <div>
+        <div className="hidden md:block">
           <h4 className="text-sm font-semibold mb-4 text-primary-foreground">Platform</h4>
           <ul className="space-y-2.5 text-sm text-primary-foreground/50">
             <li><button onClick={() => handleNavClick("#machines")} className="hover:text-primary-foreground transition-colors text-left">Machines</button></li>
@@ -65,7 +86,7 @@ const Footer = () => {
             <li><button onClick={() => handleNavClick("#video-showcase")} className="hover:text-primary-foreground transition-colors text-left">Video Showcase</button></li>
           </ul>
         </div>
-        <div>
+        <div className="hidden md:block">
           <h4 className="text-sm font-semibold mb-4 text-primary-foreground">Company</h4>
           <ul className="space-y-2.5 text-sm text-primary-foreground/50">
             <li><button onClick={() => handleNavClick("#use-cases")} className="hover:text-primary-foreground transition-colors text-left">Use Cases</button></li>

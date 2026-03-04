@@ -21,7 +21,7 @@ const specs = [
   { label: "Capacity", value: "360-520 items (Configurable)" },
   { label: "Power", value: "220V / 50Hz" },
   { label: "Dimensions", value: "183cm × 75cm × 78cm" },
-  { label: "Gross Weight", value: "~250 kg" },
+  { label: "Gross Weight", value: "250 kg" },
   { label: "Payment", value: "Digital Payment Only" },
   { label: "Connectivity", value: "4G SIM + WiFi" },
 ];
@@ -33,9 +33,15 @@ const SnackVendingPage = () => {
   const [step, setStep] = useState<"configure" | "checkout">("configure");
   const [form, setForm] = useState({ name: "", company: "", phone: "", email: "", location: "", notes: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [machineType, setMachineType] = useState<"imported" | "local">("imported");
 
-  const basePrice = 450000;
-  const addOnTotal = selectedAddOns.reduce((sum, id) => sum + (addOns.find(a => a.id === id)?.price || 0), 0);
+  const basePrice = machineType === "imported" ? 450000 : 380000;
+  const addOnTotal = selectedAddOns.reduce((sum, id) => {
+    const addon = addOns.find(a => a.id === id);
+    if (!addon) return sum;
+    if (machineType === "local" && id === "chiller") return sum;
+    return sum + addon.price;
+  }, 0);
   const unitPrice = basePrice + addOnTotal;
   const totalPrice = unitPrice * quantity;
 
@@ -73,6 +79,14 @@ const SnackVendingPage = () => {
                 <p className="text-sm text-muted-foreground mt-3 italic">
                   Sometimes we import chassis and integrate our brain. Sometimes we build locally. Either way: powered by SOHUB.
                 </p>
+                <button 
+                  onClick={() => document.getElementById('purchase')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="btn-primary mt-6 group"
+                >
+                  <ShoppingBag size={16} className="mr-2" />
+                  Buy Now
+                  <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
+                </button>
               </motion.div>
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}>
                 <div className="rounded-2xl overflow-hidden shadow-2xl aspect-video">
@@ -194,12 +208,45 @@ const SnackVendingPage = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                     {/* Left: Options */}
                     <div className="lg:col-span-3 space-y-6">
+                      {/* Machine Type Selection */}
+                      <div className="p-6 rounded-2xl border border-border bg-card">
+                        <h3 className="font-semibold text-lg mb-4">Machine Type</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <button
+                            onClick={() => setMachineType("imported")}
+                            className={`p-4 rounded-xl border transition-all text-left ${machineType === "imported" ? "border-accent bg-accent/5 ring-1 ring-accent/20" : "border-border bg-card hover:border-accent/30"}`}
+                          >
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${machineType === "imported" ? "bg-accent border-accent" : "border-border"}`}>
+                                {machineType === "imported" && <div className="w-2 h-2 rounded-full bg-white" />}
+                              </div>
+                              <span className="font-medium">Imported Chassis</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-2">Premium imported chassis with advanced features</p>
+                            <span className="text-lg font-bold">{formatPrice(450000)}</span>
+                          </button>
+                          <button
+                            onClick={() => setMachineType("local")}
+                            className={`p-4 rounded-xl border transition-all text-left ${machineType === "local" ? "border-accent bg-accent/5 ring-1 ring-accent/20" : "border-border bg-card hover:border-accent/30"}`}
+                          >
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${machineType === "local" ? "bg-accent border-accent" : "border-border"}`}>
+                                {machineType === "local" && <div className="w-2 h-2 rounded-full bg-white" />}
+                              </div>
+                              <span className="font-medium">Local Build</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-2">Locally manufactured with SOHUB integration</p>
+                            <span className="text-lg font-bold">{formatPrice(380000)}</span>
+                          </button>
+                        </div>
+                      </div>
+
                       {/* Base */}
                       <div className="p-6 rounded-2xl border border-border bg-card">
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-semibold text-lg">Snack Vending Machine</h3>
-                            <p className="text-sm text-muted-foreground mt-1">Standard unit with cash payment support</p>
+                            <p className="text-sm text-muted-foreground mt-1">{machineType === "imported" ? "Premium imported chassis with cashless payment support" : "Locally built with SOHUB integration and cashless payment support"}</p>
                           </div>
                           <span className="text-xl font-bold">{formatPrice(basePrice)}</span>
                         </div>
@@ -223,7 +270,7 @@ const SnackVendingPage = () => {
                       <div>
                         <h3 className="font-semibold mb-3">Customize with Add-Ons</h3>
                         <div className="space-y-3">
-                          {addOns.map(a => (
+                          {addOns.filter(a => !(machineType === "local" && a.id === "chiller")).map(a => (
                             <motion.button
                               key={a.id}
                               onClick={() => toggleAddOn(a.id)}
@@ -263,8 +310,8 @@ const SnackVendingPage = () => {
                       <div className="sticky top-24 p-6 rounded-2xl border border-border bg-card space-y-4">
                         <h3 className="font-semibold text-lg">Order Summary</h3>
                         <div className="space-y-2 text-sm">
-                          <div className="flex justify-between"><span className="text-muted-foreground">Base machine</span><span>{formatPrice(basePrice)}</span></div>
-                          {selectedAddOns.map(id => {
+                          <div className="flex justify-between"><span className="text-muted-foreground">{machineType === "imported" ? "Imported chassis" : "Local build"}</span><span>{formatPrice(basePrice)}</span></div>
+                          {selectedAddOns.filter(id => !(machineType === "local" && id === "chiller")).map(id => {
                             const a = addOns.find(x => x.id === id)!;
                             return <div key={id} className="flex justify-between"><span className="text-muted-foreground">{a.name}</span><span>{formatPrice(a.price)}</span></div>;
                           })}
