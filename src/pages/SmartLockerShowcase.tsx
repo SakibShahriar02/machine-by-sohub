@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
-import { Check, ArrowRight, Shield, Smartphone, Box, Lock } from "lucide-react";
+import { Check, ArrowRight, Shield, Smartphone, Box, Lock, Play } from "lucide-react";
 import lockerImg from "@/assets/machine-locker.jpg";
 
 const features = [
@@ -26,6 +26,7 @@ const SmartLockerShowcase = () => {
   const [form, setForm] = useState({ name: "", company: "", phone: "", email: "", location: "", useCase: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,13 +93,39 @@ const SmartLockerShowcase = () => {
               </motion.div>
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}>
                 <div className="rounded-2xl overflow-hidden shadow-2xl aspect-video">
-                  <iframe
-                    src="https://www.youtube.com/embed/jZk6Zv-q-zw"
-                    title="Smart Locker Vending Machine Demo"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
+                  {!isVideoPlaying ? (
+                    <div className="group cursor-pointer" onClick={() => setIsVideoPlaying(true)}>
+                      <div className="relative aspect-video bg-muted">
+                        <img
+                          src={`https://img.youtube.com/vi/jZk6Zv-q-zw/maxresdefault.jpg`}
+                          alt="Smart Locker Vending Machine"
+                          className="w-full h-full object-cover"
+                        />
+                        
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-foreground/40 flex items-center justify-center group-hover:bg-foreground/50 transition-colors">
+                          <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Play className="w-8 h-8 text-white fill-current ml-1" />
+                          </div>
+                        </div>
+
+                        {/* Title Badge */}
+                        <div className="absolute bottom-3 left-3 right-3 bg-gradient-to-r from-accent to-accent/80 backdrop-blur-sm rounded px-3 py-2 shadow-lg">
+                          <p className="font-semibold text-white text-sm">
+                            Smart Locker Vending Machine
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <iframe
+                      src="https://www.youtube.com/embed/jZk6Zv-q-zw?autoplay=1"
+                      title="Smart Locker Vending Machine Demo"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  )}
                 </div>
               </motion.div>
             </div>

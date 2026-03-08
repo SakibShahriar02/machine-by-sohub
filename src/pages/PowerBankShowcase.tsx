@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
-import { Check, ArrowRight, Battery, MapPin, Smartphone, Shield } from "lucide-react";
+import { Check, ArrowRight, Battery, MapPin, Smartphone, Shield, Play } from "lucide-react";
 
 const features = [
   { icon: Battery, title: "Grab-and-Go Rental", desc: "Users pick up a fully charged power bank, use it anywhere, and return it to any station in the network." },
@@ -25,6 +25,7 @@ const PowerBankShowcase = () => {
   const [form, setForm] = useState({ name: "", company: "", phone: "", email: "", location: "", useCase: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,13 +92,39 @@ const PowerBankShowcase = () => {
               </motion.div>
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}>
                 <div className="rounded-2xl overflow-hidden shadow-2xl aspect-video">
-                  <iframe
-                    src="https://www.youtube.com/embed/Y08VPoImhoA"
-                    title="Power Bank Rental Station Demo"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
+                  {!isVideoPlaying ? (
+                    <div className="group cursor-pointer" onClick={() => setIsVideoPlaying(true)}>
+                      <div className="relative aspect-video bg-muted">
+                        <img
+                          src={`https://img.youtube.com/vi/Y08VPoImhoA/maxresdefault.jpg`}
+                          alt="Power Bank Rental Station"
+                          className="w-full h-full object-cover"
+                        />
+                        
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-foreground/40 flex items-center justify-center group-hover:bg-foreground/50 transition-colors">
+                          <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Play className="w-8 h-8 text-white fill-current ml-1" />
+                          </div>
+                        </div>
+
+                        {/* Title Badge */}
+                        <div className="absolute bottom-3 left-3 right-3 bg-gradient-to-r from-accent to-accent/80 backdrop-blur-sm rounded px-3 py-2 shadow-lg">
+                          <p className="font-semibold text-white text-sm">
+                            Power Bank Rental Station
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <iframe
+                      src="https://www.youtube.com/embed/Y08VPoImhoA?autoplay=1"
+                      title="Power Bank Rental Station Demo"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  )}
                 </div>
               </motion.div>
             </div>

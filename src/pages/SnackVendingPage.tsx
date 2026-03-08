@@ -1,13 +1,21 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
-import { Check, ArrowRight, Plus, Minus, ShoppingBag, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ArrowRight, Plus, Minus, ShoppingBag, ChevronDown, ChevronUp, Play } from "lucide-react";
 import vendingImg from "@/assets/machine-vending.jpg";
 import dashboardImg from "@/assets/dashboard-ecosystem.jpg";
 import importedMachineImg from "@/assets/sohub-snacks-imported.png";
 import localMachineImg from "@/assets/sohub-snacks-local.png";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 interface VideoSlot {
   title: string;
@@ -65,8 +73,7 @@ const SnackVendingPage = () => {
   const [machineType, setMachineType] = useState<"imported" | "local">("imported");
   const [loading, setLoading] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const autoScrollRef = useRef<NodeJS.Timeout | null>(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   const basePrice = machineType === "imported" ? 340000 : 250000;
   const addOnTotal = selectedAddOns.reduce((sum, id) => {
@@ -83,47 +90,6 @@ const SnackVendingPage = () => {
   };
 
   const formatPrice = (n: number) => `৳${n.toLocaleString("en-BD")}`;
-
-  // Auto-scroll for videos
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const startAutoScroll = () => {
-      autoScrollRef.current = setInterval(() => {
-        if (!el) return;
-        const maxScroll = el.scrollWidth - el.clientWidth;
-        if (el.scrollLeft >= maxScroll - 10) {
-          el.scrollTo({ left: 0, behavior: "smooth" });
-        } else {
-          el.scrollBy({ left: 340, behavior: "smooth" });
-        }
-      }, 4000);
-    };
-
-    startAutoScroll();
-
-    const stopAutoScroll = () => {
-      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-    };
-    const resumeAutoScroll = () => {
-      stopAutoScroll();
-      startAutoScroll();
-    };
-
-    el.addEventListener("mouseenter", stopAutoScroll);
-    el.addEventListener("mouseleave", resumeAutoScroll);
-    el.addEventListener("touchstart", stopAutoScroll);
-    el.addEventListener("touchend", resumeAutoScroll);
-
-    return () => {
-      stopAutoScroll();
-      el.removeEventListener("mouseenter", stopAutoScroll);
-      el.removeEventListener("mouseleave", resumeAutoScroll);
-      el.removeEventListener("touchstart", stopAutoScroll);
-      el.removeEventListener("touchend", resumeAutoScroll);
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,20 +166,45 @@ const SnackVendingPage = () => {
                   onClick={() => document.getElementById('purchase')?.scrollIntoView({ behavior: 'smooth' })}
                   className="btn-primary mt-6 group"
                 >
-                  <ShoppingBag size={16} className="mr-2" />
-                  Buy Now
+                  Continue to Order
                   <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
                 </button>
               </motion.div>
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}>
                 <div className="rounded-2xl overflow-hidden shadow-2xl aspect-video">
-                  <iframe
-                    src="https://www.youtube.com/embed/4835onrVx34"
-                    title="Snack Vending Machine"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
+                  {!isVideoPlaying ? (
+                    <div className="group cursor-pointer" onClick={() => setIsVideoPlaying(true)}>
+                      <div className="relative aspect-video bg-muted">
+                        <img
+                          src={`https://img.youtube.com/vi/4835onrVx34/maxresdefault.jpg`}
+                          alt="Snack Vending Machine"
+                          className="w-full h-full object-cover"
+                        />
+                        
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-foreground/40 flex items-center justify-center group-hover:bg-foreground/50 transition-colors">
+                          <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <Play className="w-8 h-8 text-white fill-current ml-1" />
+                          </div>
+                        </div>
+
+                        {/* Title Badge */}
+                        <div className="absolute bottom-3 left-3 right-3 bg-gradient-to-r from-accent to-accent/80 backdrop-blur-sm rounded px-3 py-2 shadow-lg">
+                          <p className="font-semibold text-white text-sm">
+                            Snack Vending Machine
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <iframe
+                      src="https://www.youtube.com/embed/4835onrVx34?autoplay=1"
+                      title="Snack Vending Machine"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  )}
                 </div>
               </motion.div>
             </div>
@@ -230,44 +221,60 @@ const SnackVendingPage = () => {
               </div>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <div className="relative">
-                {/* Scroll buttons */}
-                <button onClick={() => {
-                  const container = document.getElementById('snack-videos-scroll');
-                  if (container) container.scrollBy({ left: -340, behavior: 'smooth' });
-                }} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 rounded-full bg-card border border-border shadow-lg flex items-center justify-center hover:bg-secondary transition-colors hidden md:flex">
-                  <ChevronLeft size={18} />
-                </button>
-                <button onClick={() => {
-                  const container = document.getElementById('snack-videos-scroll');
-                  if (container) container.scrollBy({ left: 340, behavior: 'smooth' });
-                }} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 rounded-full bg-card border border-border shadow-lg flex items-center justify-center hover:bg-secondary transition-colors hidden md:flex">
-                  <ChevronRight size={18} />
-                </button>
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                plugins={[
+                  Autoplay({
+                    delay: 4000,
+                  }),
+                ]}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {videos.map((video, index) => (
+                    <CarouselItem key={video.youtubeId} className="basis-full sm:basis-1/2 md:basis-1/2">
+                      <div className="p-1">
+                        <div className="group">
+                          <a
+                            href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="relative rounded-2xl overflow-hidden shadow-lg block hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                          >
+                            {/* Thumbnail */}
+                            <div className="relative aspect-video bg-muted">
+                              <img
+                                src={`https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
+                                alt={video.title}
+                                className="w-full h-full object-cover"
+                              />
+                              
+                              {/* Overlay */}
+                              <div className="absolute inset-0 bg-foreground/40 flex items-center justify-center group-hover:bg-foreground/50 transition-colors">
+                                <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+                                  <Play className="w-6 h-6 text-white fill-current ml-1" />
+                                </div>
+                              </div>
 
-                {/* Scrollable container */}
-                <div ref={scrollRef} id="snack-videos-scroll" className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-                  {videos.map(v => (
-                    <div key={v.youtubeId} className="flex-shrink-0 w-[calc(50%-12px)] md:w-[calc(50%-12px)] snap-start">
-                      <div className="rounded-2xl overflow-hidden border border-border bg-card shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
-                        <div className="aspect-video">
-                          <iframe
-                            src={`https://www.youtube.com/embed/${v.youtubeId}`}
-                            title={v.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-full"
-                            loading="lazy"
-                          />
-                        </div>
-                        <div className="p-4">
-                          <p className="text-sm font-semibold">{v.title}</p>
+                              {/* Title Badge */}
+                              <div className="absolute bottom-2 left-2 right-2 bg-gradient-to-r from-accent to-accent/80 backdrop-blur-sm rounded px-2 py-1 shadow-lg">
+                                <p className="font-semibold text-white text-xs truncate">
+                                  {video.title}
+                                </p>
+                              </div>
+                            </div>
+                          </a>
                         </div>
                       </div>
-                    </div>
+                    </CarouselItem>
                   ))}
-                </div>
-              </div>
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex" />
+                <CarouselNext className="hidden md:flex" />
+              </Carousel>
             </ScrollReveal>
           </div>
         </section>
@@ -326,7 +333,7 @@ const SnackVendingPage = () => {
 
         {/* Configurator */}
         <section id="purchase" className="section-padding">
-          <div className="section-container max-w-5xl mx-auto">
+          <div className="section-container max-w-6xl mx-auto">
             <ScrollReveal>
               <div className="text-center mb-14">
                 <span className="section-badge">Purchase</span>
@@ -353,9 +360,9 @@ const SnackVendingPage = () => {
                               <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${machineType === "imported" ? "bg-accent border-accent" : "border-border"}`}>
                                 {machineType === "imported" && <div className="w-2 h-2 rounded-full bg-white" />}
                               </div>
-                              <span className="font-medium">Imported Chassis</span>
+                              <span className="font-medium">Imported Chassis - (With Chiller)</span>
                             </div>
-                            <p className="text-sm text-muted-foreground mb-2">Premium imported chassis with advanced features</p>
+                            <p className="text-sm text-muted-foreground mb-2">Premium imported chassis with built-in cooler and SOHUB integration.</p>
                            <span className="text-lg font-bold text-right block">৳340,000</span>
                           </button>
                           <button
@@ -366,9 +373,9 @@ const SnackVendingPage = () => {
                               <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${machineType === "local" ? "bg-accent border-accent" : "border-border"}`}>
                                 {machineType === "local" && <div className="w-2 h-2 rounded-full bg-white" />}
                               </div>
-                              <span className="font-medium">Local Build</span>
+                              <span className="font-medium">Local Build - (Without Chiller)</span>
                             </div>
-                            <p className="text-sm text-muted-foreground mb-2">Locally manufactured with SOHUB integration</p>
+                            <p className="text-sm text-muted-foreground mb-2">Manufactured with full SOHUB integration.</p>
                             <span className="text-lg font-bold text-right block">{formatPrice(250000)}</span>
                           </button>
                         </div>
