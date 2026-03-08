@@ -103,20 +103,20 @@ const Header = () => {
       <div className={`bg-secondary/50 border-b border-border/50 transition-all duration-300 overflow-hidden ${
         scrolled ? 'max-h-0 opacity-0' : 'max-h-20 opacity-100'
       }`}>
-        <div className="section-container py-2">
+        <div className="section-container py-0.5">
           <div className="flex items-center justify-between">
             <a href="https://sohub.com.bd/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
               <img src="/logo/solution-hub-technologies.png" alt="Solution Hub" className="h-8" />
-              <p className="text-xs md:text-sm text-muted-foreground">
-                <span className="hidden sm:inline">Solution Hub Technologies(SOHUB) Owned & Operated</span>
-                <span className="sm:hidden">SOHUB Owned & Operated</span>
+              <p className="text-[10px] md:text-xs text-muted-foreground">
+                <span className="hidden md:inline">Solution Hub Technologies(SOHUB) Owned & Operated</span>
+                <span className="md:hidden">SOHUB owned & operated</span>
               </p>
             </a>
             <DropdownMenu modal={false} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-[12px] sm:text-sm text-muted-foreground hover:bg-transparent hover:text-foreground focus-visible:ring-0 focus-visible:ring-offset-0 flex items-center gap-1 mr-[-1rem] sm:mr-0">
+                 <Button variant="ghost" size="sm" className="text-xs hover:bg-transparent hover:text-foreground focus-visible:ring-0 focus-visible:ring-offset-0 text-muted-foreground gap-1 md:mr-0 -mr-4">
                   Our Initiatives
-                  {dropdownOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                  {dropdownOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[320px] p-3" sideOffset={5}>
